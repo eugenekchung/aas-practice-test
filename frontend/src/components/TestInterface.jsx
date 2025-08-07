@@ -10,6 +10,12 @@ const TestInterface = () => {
   const [testStarted, setTestStarted] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Connect frontend to backend
+  const API_URL = import.meta.env.PROD
+    ? 'https://overflowing-prosperity.railway.app'
+    : 'http://localhost:3001';
+
+
   // Load questions on mount
   useEffect(() => {
     loadQuestions();
