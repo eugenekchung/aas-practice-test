@@ -99,7 +99,7 @@ const TestInterface = () => {
     
     // Save to backend
     try {
-      await axios.post('http://localhost:3001/api/sessions/save', progress);
+      await axios.post('${API_URL}/api/sessions/save', progress);
     } catch (error) {
       console.error('Failed to save progress:', error);
     }
@@ -129,7 +129,7 @@ const TestInterface = () => {
     };
     
     try {
-      const response = await axios.post('http://localhost:3001/api/sessions/submit', results);
+      const response = await axios.post('${API_URL}/api/sessions/submit', results);
       // Navigate to results page
       window.location.href = `/results/${response.data.sessionId}`;
     } catch (error) {
