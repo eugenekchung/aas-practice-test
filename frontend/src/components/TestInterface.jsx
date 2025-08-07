@@ -11,8 +11,8 @@ const TestInterface = () => {
   const [loading, setLoading] = useState(true);
 
   // Connect frontend to backend
-  const API_URL = import.meta.env.PROD
-    ? 'https://overflowing-prosperity.railway.app'
+  const API_URL = import.meta.env.MODE === 'production'
+    ? 'https://aas-practice-test-production.up.railway.app'
     : 'http://localhost:3001';
 
 
@@ -51,7 +51,7 @@ const TestInterface = () => {
 
   const loadQuestions = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/questions');
+      const response = await axios.get('https://aas-practice-test-production.up.railway.app/api/questions');
       setQuestions(response.data);
       setLoading(false);
     } catch (error) {
@@ -99,7 +99,7 @@ const TestInterface = () => {
     
     // Save to backend
     try {
-      await axios.post('http://localhost:3001/api/sessions/save', progress);
+      await axios.post('https://aas-practice-test-production.up.railway.app/api/sessions/save', progress);
     } catch (error) {
       console.error('Failed to save progress:', error);
     }
@@ -129,7 +129,7 @@ const TestInterface = () => {
     };
     
     try {
-      const response = await axios.post('http://localhost:3001/api/sessions/submit', results);
+      const response = await axios.post('https://aas-practice-test-production.up.railway.app/api/sessions/submit', results);
       // Navigate to results page
       window.location.href = `/results/${response.data.sessionId}`;
     } catch (error) {
