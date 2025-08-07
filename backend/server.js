@@ -81,6 +81,7 @@ db.serialize(() => {
 // Routes
 
 // Get all questions for a test
+// In the /api/questions endpoint
 app.get('/api/questions', authenticateToken, (req, res) => {
   const { subject, limit = 50 } = req.query;
   
@@ -100,16 +101,29 @@ app.get('/api/questions', authenticateToken, (req, res) => {
       return res.status(500).json({ error: err.message });
     }
     
-    // Parse JSON fields
-    const questions = rows.map(row => ({
-      ...row,
-      options: JSON.parse(row.options || '[]')
-    }));
+    // IMPORTANT: Parse the JSON options field
+    const questions = rows.map(row => {
+      let options = [];
+      try {
+        // Parse options if it's a string
+        options = typeof row.options === 'string' 
+          ? JSON.parse(row.options) 
+          : row.options || [];
+      } catch (e) {
+        console.error('Failed to parse options for question', row.id, e);
+        options = ['Option A', 'Option B', 'Option C', 'Option D'];
+      }
+      
+      return {
+        ...row,
+        options: options
+      };
+    });
     
+    console.log('Sending questions:', questions.length);
     res.json(questions);
   });
 });
-
 // Save progress
 app.post('/api/sessions/save', authenticateToken, (req, res) => {
   const { sessionId, currentQuestion, answers, timeRemaining } = req.body;
