@@ -1,34 +1,43 @@
 const sqlite3 = require('sqlite3').verbose();
+const fs = require('fs');
+const path = require('path');
+
 const db = new sqlite3.Database('./test_database.db');
+const questions = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'data', 'questions.json'), 'utf8')
+);
 
-// Your questions from the practice tests
-const questions = [
-  {
-    subject: 'Mathematics',
-    type: 'multiple_choice',
-    question: 'If a train travels at 80 km/h for 2.5 hours...',
-    optionA: '180 km',
-    optionB: '200 km',
-    optionC: '220 km',
-    optionD: '240 km',
-    correct: 1
-  },
-  // Add more questions here
-];
-
-// Import to database
-questions.forEach(q => {
-  db.run(
-    `INSERT INTO questions (subject, type, question_text, options, correct_answer)
-     VALUES (?, ?, ?, ?, ?)`,
-    [
+db.serialize(() => {
+  // Clear existing questions (optional)
+  db.run('DELETE FROM questions');
+  
+  // Prepare insert statement
+  const stmt = db.prepare(`
+    INSERT INTO questions 
+    (subject, type, difficulty, question_text, options, correct_answer, explanation)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  
+  // Insert each question
+  questions.forEach((q, index) => {
+    stmt.run(
       q.subject,
       q.type,
-      q.question,
-      JSON.stringify([q.optionA, q.optionB, q.optionC, q.optionD]),
-      q.correct
-    ]
-  );
+      q.difficulty,
+      q.question_text,
+      JSON.stringify(q.options),
+      q.correct_answer,
+      q.explanation
+    );
+    console.log(`Imported question ${index + 1}/${questions.length}`);
+  });
+  
+  stmt.finalize();
+  
+  // Verify import
+  db.get('SELECT COUNT(*) as count FROM questions', (err, row) => {
+    console.log(`Total questions in database: ${row.count}`);
+  });
 });
 
-console.log('Questions imported!');
+db.close();

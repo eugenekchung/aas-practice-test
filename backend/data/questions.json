@@ -1,0 +1,20 @@
+[
+  {
+    "subject": "Mathematics",
+    "type": "multiple_choice",
+    "difficulty": "medium",
+    "question_text": "A cone of height 12 cm is placed on top of a cylinder...",
+    "options": ["100π cm³", "125π cm³", "145π cm³", "150π cm³"],
+    "correct_answer": 3,
+    "explanation": "Using V = πr²h for cylinder and V = πr²h/3 for cone..."
+  },
+  {
+    "subject": "Abstract Reasoning",
+    "type": "pattern",
+    "difficulty": "medium",
+    "question_text": "The drawings in the boxes follow a pattern.",
+    "options": ["Option A", "Option B", "Option C", "Option D", "Option E"],
+    "correct_answer": 1,
+    "explanation": "The pattern rotates clockwise with the black square moving..."
+  }
+]
