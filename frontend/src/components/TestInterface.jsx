@@ -1,3 +1,7 @@
+const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:3001'
+    : 'https://aas-practice-test-production.up.railway.app';
+
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
