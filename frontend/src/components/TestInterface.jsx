@@ -4,8 +4,10 @@ const API_URL = window.location.hostname === 'localhost'
 
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const TestInterface = () => {
+const TestInterface = ({ onTestComplete}) => {
+  const navigate = useNavigate();
   // State management
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [questions, setQuestions] = useState([]);
@@ -133,12 +135,22 @@ const TestInterface = () => {
     };
     
     try {
-      const response = await axios.post('${API_URL}/api/sessions/submit', results);
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${API_URL}/api/sessions/submit`, 
+        results,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
       // Navigate to results page
-      window.location.href = `/results/${response.data.sessionId}`;
+      navigate(`/results/${response.data.sessionId}`);
+      
+      // Or if onTestComplete is provided
+      if (onTestComplete) {
+        onTestComplete(response.data.sessionId);
+      }
     } catch (error) {
       console.error('Failed to submit test:', error);
-      // Store locally and show results
       localStorage.setItem('testResults', JSON.stringify(results));
     }
   };
