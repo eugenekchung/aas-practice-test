@@ -51,7 +51,7 @@ const TestInterface = () => {
 
   const loadQuestions = async () => {
     try {
-      const response = await axios.get('https://aas-practice-test-production.up.railway.app/api/questions');
+      const response = await axios.get('${API_URL}/api/questions');
       setQuestions(response.data);
       setLoading(false);
     } catch (error) {
